@@ -25,6 +25,23 @@ jobs:
           --health-timeout=5s
           --health-retries=3
 
+      glauth:
+        image: glauth/glauth
+        options: >-
+          --health-cmd="curl --fail http://localhost:389 || exit 1"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
+        volumes:
+          - type: bind
+            source: ./config.cfg
+            target: /app/config/config.cfg
+          - type: bind
+            source: ./mysql-linux-amd64.so
+            target: /app/plugins/mysql-linux-amd64.so
+        ports:
+          - 389:389
+
     steps:
       - uses: actions/checkout@v4
 
@@ -48,12 +65,10 @@ jobs:
         run: |
           curl -L -o mysql-linux-amd64.so https://github.com/glauth/glauth-mysql/releases/download/v2.3.2/mysql-linux-amd64.so
 
-      - name: Run GLAUTH container
+      - name: Restart GLAUTH service
         run: |
-          docker run -d \
-            -v $(pwd)/config.cfg:/app/config/config.cfg \
-            -v $(pwd)/mysql-linux-amd64.so:/app/plugins/mysql-linux-amd64.so \
-            glauth/glauth
+          docker-compose down
+          docker-compose up -d
 
       - name: Test
         env:
