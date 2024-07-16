@@ -42,7 +42,7 @@ jobs:
 
       - name: Download config from Pastebin
         run: |
-          curl -o config.cfg https://pastebin.com/raw/JYxZmQ6X
+          curl -o config.cfg https://pastebin.com/raw/VDBbS60C
 
       - name: Download MySQL plugin
         run: |
