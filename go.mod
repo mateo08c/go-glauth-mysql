@@ -1,6 +1,6 @@
 module github.com/mateo08c/go-glauth-mysql
 
-go 1.22.5
+go 1.22
 
 require (
 	gorm.io/driver/mysql v1.5.7
