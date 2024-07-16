@@ -207,7 +207,7 @@ func (g *Glauth) GroupExistByName(name string) (bool, error) {
 
 func (g *Glauth) GetGroups() ([]*ressources.Group, error) {
 	var groups []*models.LDAPGroup
-	err := g.db.Find(&groups).Error
+	err := g.db.Table("ldapgroups").Find(&groups).Error
 	if err != nil {
 		return nil, err
 	}
