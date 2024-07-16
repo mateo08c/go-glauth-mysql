@@ -16,11 +16,9 @@ var context *glauth.Context
 // start on init
 func init() {
 	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file")
+	if err == nil {
+		log.Println("Loaded from .env file")
 	}
-
-	log.Println("Loaded .env file")
 
 	context = &glauth.Context{
 		Username: os.Getenv("DB_USERNAME"),
@@ -94,6 +92,14 @@ func TestGroup(t *testing.T) {
 	if group == nil {
 		t.Log("Group not found")
 	}
+
+	//try to get all groups
+	groups, err := client.GetGroups()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	t.Log(groups)
 }
 
 func TestUser(t *testing.T) {
