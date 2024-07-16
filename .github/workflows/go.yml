@@ -7,7 +7,6 @@ on:
     branches: [ "main" ]
 
 jobs:
-
   build:
     runs-on: ubuntu-latest
     services:
@@ -27,25 +26,40 @@ jobs:
           --health-retries=3
 
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-    - name: Set up Go
-      uses: actions/setup-go@v4
-      with:
-        go-version: '1.22'
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.22'
 
-    - name: Wait for MySQL to be ready
-      run: |
-        until mysqladmin ping -h "127.0.0.1" --silent; do
-          echo 'waiting for mysql to be connectable...'
-          sleep 3
-        done
-        
-    - name: Test
-      env:
-        DB_USERNAME: glauth
-        DB_PASSWORD: password
-        DB_HOSTNAME: 127.0.0.1
-        DB_PORT: 3306
-        DB_NAME: glauth
-      run: go test -v ./...
+      - name: Wait for MySQL to be ready
+        run: |
+          until mysqladmin ping -h "127.0.0.1" --silent; do
+            echo 'waiting for mysql to be connectable...'
+            sleep 3
+          done
+
+      - name: Download config from Pastebin
+        run: |
+          curl -o config.cfg https://pastebin.com/raw/JYxZmQ6X
+
+      - name: Download MySQL plugin
+        run: |
+          curl -L -o mysql-linux-amd64.so https://github.com/glauth/glauth-mysql/releases/download/v2.3.2/mysql-linux-amd64.so
+
+      - name: Run GLAUTH container
+        run: |
+          docker run -d \
+            -v $(pwd)/config.cfg:/app/config/config.cfg \
+            -v $(pwd)/mysql-linux-amd64.so:/app/plugins/mysql-linux-amd64.so \
+            glauth/glauth
+
+      - name: Test
+        env:
+          DB_USERNAME: glauth
+          DB_PASSWORD: password
+          DB_HOSTNAME: 127.0.0.1
+          DB_PORT: 3306
+          DB_NAME: glauth
+        run: go test -v ./...
