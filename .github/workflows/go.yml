@@ -42,7 +42,7 @@ jobs:
 
       - name: Download config from Pastebin
         run: |
-          curl -o config.cfg https://pastebin.com/raw/VDBbS60C
+          curl -o config.cfg https://pastebin.com/raw/isWKLmAv
 
       - name: Download MySQL plugin
         run: |
@@ -50,7 +50,7 @@ jobs:
 
       - name: Run GLAUTH container
         run: |
-          docker run -t --network host \
+          docker run -t \
             -v $(pwd)/config.cfg:/app/config/config.cfg \
             -v $(pwd)/mysql-linux-amd64.so:/app/plugins/mysql-linux-amd64.so \
             glauth/glauth
