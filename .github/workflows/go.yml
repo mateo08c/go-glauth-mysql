@@ -40,10 +40,7 @@ jobs:
           echo 'waiting for mysql to be connectable...'
           sleep 3
         done
-
-    - name: Build
-      run: go build -v ./...
-
+        
     - name: Test
       env:
         DB_USERNAME: glauth
