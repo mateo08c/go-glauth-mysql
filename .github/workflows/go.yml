@@ -40,21 +40,12 @@ jobs:
             sleep 3
           done
 
-      - name: Download config from Pastebin
-        run: |
-          curl -o config.cfg https://pastebin.com/raw/isWKLmAv
+      - name: Download SQL script
+        run: curl -o init_db.sql https://pastebin.com/raw/rkLAasAg
 
-      - name: Download MySQL plugin
-        run: |
-          curl -L -o mysql-linux-amd64.so https://github.com/glauth/glauth-mysql/releases/download/v2.3.2/mysql-linux-amd64.so
-
-      - name: Run GLAUTH container
-        run: |
-          docker run -t \
-            -v $(pwd)/config.cfg:/app/config/config.cfg \
-            -v $(pwd)/mysql-linux-amd64.so:/app/plugins/mysql-linux-amd64.so \
-            glauth/glauth
-
+      - name: Initialize database
+        run: mysql -h 127.0.0.1 -u glauth -ppassword glauth < init_db.sql
+    
       - name: Test
         env:
           DB_USERNAME: glauth
