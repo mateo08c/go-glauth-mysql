@@ -36,14 +36,6 @@ func TestNew(t *testing.T) {
 	}
 
 	t.Log(client)
-
-	//try to get the group users
-	group, err := client.GetGroupByName("users")
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	t.Log(group)
 }
 
 func TestGroup(t *testing.T) {
