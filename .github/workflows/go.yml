@@ -10,8 +10,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     services:
-      mysql:
-        image: mysql:5.7
+      mariadb:
+        image: mariadb:10.5
         env:
           MYSQL_ROOT_PASSWORD: root_password
           MYSQL_DATABASE: glauth
@@ -33,10 +33,10 @@ jobs:
         with:
           go-version: '1.22'
 
-      - name: Wait for MySQL to be ready
+      - name: Wait for MariaDB to be ready
         run: |
           until mysqladmin ping -h "127.0.0.1" --silent; do
-            echo 'waiting for mysql to be connectable...'
+            echo 'waiting for mariadb to be connectable...'
             sleep 3
           done
 
